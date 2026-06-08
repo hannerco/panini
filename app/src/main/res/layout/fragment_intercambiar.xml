@@ -1,8 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<TextView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:text="Intercambiar"/>
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Intercambiar láminas"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:paddingBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lámina que doy (repetida):"
+        android:textStyle="bold"/>
+
+    <Spinner
+        android:id="@+id/spDoy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lámina que recibo (pendiente):"
+        android:textStyle="bold"/>
+
+    <Spinner
+        android:id="@+id/spRecibo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="24dp"/>
+
+    <Button
+        android:id="@+id/btnIntercambiar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Realizar intercambio"/>
+
+    <TextView
+        android:id="@+id/tvEstado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:textSize="15sp"/>
+
+</LinearLayout>

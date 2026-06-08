@@ -197,6 +197,92 @@ class LaminaDatabase(context: Context) : SQLiteOpenHelper(
         return lista
     }
 
+    // Devuelve todas las láminas de las que tengo al menos una repetida
+    fun obtenerRepetidas(): MutableList<Lamina> {
+
+        val lista = mutableListOf<Lamina>()
+
+        val cursor = readableDatabase.rawQuery(
+            "SELECT * FROM laminas WHERE repetidas > 0 ORDER BY numero",
+            null
+        )
+
+        while (cursor.moveToNext()) {
+            lista.add(
+                Lamina(
+                    cursor.getInt(0),
+                    cursor.getInt(1),
+                    cursor.getInt(2),
+                    cursor.getInt(3),
+                    cursor.getInt(4)
+                )
+            )
+        }
+
+        cursor.close()
+
+        return lista
+    }
+
+    // Intercambio: doy una lámina repetida y recibo una pendiente.
+    // La repetida disminuye en 1 y la recibida se marca como obtenida.
+    // Devuelve true solo si el intercambio fue válido.
+    fun realizarIntercambio(
+        idQueDoy: Int,
+        idQueRecibo: Int
+    ): Boolean {
+
+        val cursor = readableDatabase.rawQuery(
+            "SELECT repetidas FROM laminas WHERE numero=?",
+            arrayOf(idQueDoy.toString())
+        )
+
+        var exito = false
+
+        if (cursor.moveToFirst()) {
+
+            val repetidas = cursor.getInt(0)
+
+            if (repetidas > 0) {
+
+                val db = writableDatabase
+                db.beginTransaction()
+
+                try {
+                    // 1) disminuir la repetida de la lámina que entrego
+                    val valoresDoy = ContentValues()
+                    valoresDoy.put("repetidas", repetidas - 1)
+                    db.update(
+                        "laminas",
+                        valoresDoy,
+                        "numero=?",
+                        arrayOf(idQueDoy.toString())
+                    )
+
+                    // 2) marcar como obtenida la lámina que recibo
+                    val valoresRecibo = ContentValues()
+                    valoresRecibo.put("obtenida", 1)
+                    db.update(
+                        "laminas",
+                        valoresRecibo,
+                        "numero=?",
+                        arrayOf(idQueRecibo.toString())
+                    )
+
+                    db.setTransactionSuccessful()
+                    exito = true
+
+                } finally {
+                    db.endTransaction()
+                }
+            }
+        }
+
+        cursor.close()
+
+        return exito
+    }
+
     fun seleccionTienePendientes(
         seleccion: Int
     ): Boolean {
