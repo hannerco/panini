@@ -42,6 +42,7 @@ dependencies {
 
     implementation("androidx.fragment:fragment-ktx:1.8.2")
     implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
